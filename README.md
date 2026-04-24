@@ -1,6 +1,6 @@
 # Ixigo First-Responder SLM
 
-A small, fast language model that acts as a first responder for AI voice calls with Ixigo customers. Given a user utterance, it returns a short (3–5 word), non-declarative, present-continuous acknowledgment — e.g. `Checking your refund status`, `Looking into your booking issue` — that buys time without making promises, confirming actions, or stating outcomes.
+A small, fast language model that acts as a first responder for AI voice calls with Ixigo customers. Given a user utterance, it returns a short (3–5 word), non-declarative, present-continuous acknowledgment - e.g. `Checking your refund status`, `Looking into your booking issue` - that buys time without making promises, confirming actions, or stating outcomes.
 
 
 ## Contents of this submission
@@ -15,7 +15,7 @@ Ixigo_Finetuned/
 └── README.md                      # this file
 ```
 
-The fine-tuned model is also hosted privately on the HuggingFace Hub (gated — requires a token to download) at:
+The fine-tuned model is also hosted privately on the HuggingFace Hub (gated - requires a token to download) at:
 **https://huggingface.co/suvroo/qwen05b-ixigo-firstresponder**
 
 
@@ -23,7 +23,7 @@ The fine-tuned model is also hosted privately on the HuggingFace Hub (gated — 
 
 ### Base model
 **Qwen/Qwen2.5-0.5B-Instruct** (Apache-2.0). Chosen because:
-- 0.5B parameters — fp16 weights fit in ~1.5 GB, comfortably on a single T4 / L4 / consumer GPU.
+- 0.5B parameters - fp16 weights fit in ~1.5 GB, comfortably on a single T4 / L4 / consumer GPU.
 - Native chat template + strong instruction following for its size, which matters because the dataset is only 123 rows.
 - Generates a 3–5 word reply with sub-40 ms TTFT on GPU, which is well inside the <100 ms bonus latency target.
 
@@ -43,14 +43,14 @@ The fine-tuned model is also hosted privately on the HuggingFace Hub (gated — 
 | SFT (LoRA) | 0.14 | **1.00** | **0.71** | 22.4 | **0.84** | **1.00** |
 | SFT + DPO | **0.29** | **1.00** | 0.62 | 22.3 | 0.79 | **1.00** |
 
-- `Valid-Response@0.80` — prediction has sentence-embedding cosine ≥ 0.80 to *any* valid paraphrase for that intent. This is the primary task metric because the dataset has one-to-many valid answers (38 near-synonymous gold responses), making strict EM a lower bound.
-- `Non-declarative rate` — regex-based check against banned phrasings like `will`, `has been`, `processed`, `completed`, etc.
+- `Valid-Response@0.80` - prediction has sentence-embedding cosine ≥ 0.80 to *any* valid paraphrase for that intent. This is the primary task metric because the dataset has one-to-many valid answers (38 near-synonymous gold responses), making strict EM a lower bound.
+- `Non-declarative rate` - regex-based check against banned phrasings like `will`, `has been`, `processed`, `completed`, etc.
 - Both SFT and SFT+DPO **saturate the two task-level metrics at 1.00** on unseen prompts.
-- DPO doubles strict EM (0.14 → 0.29) — its real contribution is sharpening string-level lexical fidelity while SFT already owns the semantic and alignment metrics.
+- DPO doubles strict EM (0.14 → 0.29) - its real contribution is sharpening string-level lexical fidelity while SFT already owns the semantic and alignment metrics.
 
 ### Serving (bonus)
 - `serve.py` exposes a FastAPI REST endpoint (`POST /chat`) with structured Pydantic request/response schemas and an OpenAPI spec at `/docs`.
-- **TTFT p50 ≈ 38 ms on GPU** — well under the 100 ms bonus target. TTFT (time-to-first-token) is the correct latency metric for a voice-call first-responder because once the first token is ready, TTS begins speaking and the remaining tokens stream during audio playback. This is the standard conversational-AI latency metric used by LiveKit, Pipecat, Vapi, and Deepgram Voice Agent.
+- **TTFT p50 ≈ 38 ms on GPU** - well under the 100 ms bonus target. TTFT (time-to-first-token) is the correct latency metric for a voice-call first-responder because once the first token is ready, TTS begins speaking and the remaining tokens stream during audio playback. This is the standard conversational-AI latency metric used by LiveKit, Pipecat, Vapi, and Deepgram Voice Agent.
 - For CPU-only reviewers, a Q4_K_M GGUF version is included that hits TTFT ~20 ms / full-response ~80 ms on any modern laptop CPU via `llama.cpp`.
 
 
@@ -68,7 +68,7 @@ python -m venv myenv
 pip install -r requirements.txt
 ```
 
-### Option A — GPU path (fastest)
+### Option A - GPU path (fastest)
 
 If you have an NVIDIA GPU with CUDA drivers installed:
 
@@ -83,7 +83,7 @@ python serve.py
 
 The log should say `device=cuda` at startup. Expected TTFT ≈ 30–60 ms.
 
-### Option B — CPU path (no GPU required)
+### Option B - CPU path (no GPU required)
 
 The submission folder includes `qwen05b-ixigo.Q4_K_M.gguf` (≈340 MB), a 4-bit quantized version of the merged model optimized for CPU inference via `llama.cpp`.
 
@@ -94,11 +94,11 @@ pip install llama-cpp-python
 python serve.py
 ```
 
-Expected TTFT ≈ 20 ms, full-response ≈ 80 ms on an 8-core modern CPU — **passes the <100 ms target without any GPU**.
+Expected TTFT ≈ 20 ms, full-response ≈ 80 ms on an 8-core modern CPU - **passes the <100 ms target without any GPU**.
 
 ### If you want to download the model from HuggingFace Hub instead
 
-The model is private/gated — you'll need a read-access HF token.
+The model is private/gated - you'll need a read-access HF token.
 
 ```powershell
 $env:HF_TOKEN = "hf_xxxxxxxxxxxxxxxx"    # Windows PowerShell
@@ -209,11 +209,11 @@ Generate a first-responder acknowledgment for a user utterance.
 |---|---|---|
 | `response` | string | Non-declarative 3–5 word acknowledgment. |
 | `latency_ms` | float | Full-response generation time in milliseconds. |
-| `ttft_ms` | float | Time-to-first-token — voice-call-relevant metric. |
+| `ttft_ms` | float | Time-to-first-token - voice-call-relevant metric. |
 
 **Error responses:**
-- `400` — prompt exceeds 120 words (the 100-word recommendation has 20% slack).
-- `422` — validation error (empty text, oversized `max_new_tokens`, etc.).
+- `400` - prompt exceeds 120 words (the 100-word recommendation has 20% slack).
+- `422` - validation error (empty text, oversized `max_new_tokens`, etc.).
 
 ## 5. Reproducing training (optional)
 
