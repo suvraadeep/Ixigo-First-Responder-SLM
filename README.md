@@ -16,8 +16,8 @@ Ixigo_Finetuned/
 ```
 
 The fine-tuned model is also hosted privately on the HuggingFace Hub (gated - requires a token to download) at:
-**https://huggingface.co/suvroo/qwen05b-ixigo-firstresponder**
-
+- **https://huggingface.co/suvroo/qwen05b-ixigo-firstresponder**
+- Kaggle: https://www.kaggle.com/code/suvroo/ixigo-first-responder-slm
 
 ## 1. What was built
 
