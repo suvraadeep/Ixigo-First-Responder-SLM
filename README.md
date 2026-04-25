@@ -3,7 +3,7 @@
 A small, fast language model that acts as a first responder for AI voice calls with Ixigo customers. Given a user utterance, it returns a short (3–5 word), non-declarative, present-continuous acknowledgment - e.g. `Checking your refund status`, `Looking into your booking issue` - that buys time without making promises, confirming actions, or stating outcomes.
 
 
-## Contents of this submission
+## Contents
 
 ```
 Ixigo_Finetuned/
@@ -15,7 +15,7 @@ Ixigo_Finetuned/
 └── README.md                      # this file
 ```
 
-The fine-tuned model is also hosted privately on the HuggingFace Hub (gated - requires a token to download) at:
+The fine-tuned model is also hosted on the HuggingFace Hub (gated - requires a token to download) at:
 - **https://huggingface.co/suvroo/qwen05b-ixigo-firstresponder**
 - Kaggle: https://www.kaggle.com/code/suvroo/ixigo-first-responder-slm
 
